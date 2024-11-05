@@ -21,7 +21,6 @@ const app = express();
 // settings
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "views"));
-app.set("port", port);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
