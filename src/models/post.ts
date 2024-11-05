@@ -35,7 +35,6 @@ export interface IPost {
   comments: IComment[];
   likes: ILike[];
   tags?: string[];
-  friendRequests: IFriendRequest[];
   active: boolean;
   status: PostStatus;
   createdAt: Date; // Timestamp for user creation
@@ -99,7 +98,6 @@ const schema = new Schema(
       ],
       default: [],
     }, // Use the interface for likes
-    friendRequests: { type: [friendRequestSchema], default: [] },
     commentsEnabled: { type: Boolean, default: true }, // Controls comments on the post
     pinned: { type: Boolean, default: false }, // Controls pinning of the post
     downloadEnabled: { type: Boolean, default: false }, // Controls download option

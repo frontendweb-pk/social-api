@@ -7,6 +7,7 @@ const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  console.log(err, "eee");
   if (err instanceof CustomError) {
     const errorResponse = err.renderError();
     res.status(err.status).json(errorResponse);

@@ -49,8 +49,8 @@ export const login = async (
 
     if (!user) throw new NotFoundError("User not existed!, Please register");
 
-    const isMatch = Password.compare(password, user.password);
-    if (!isMatch) throw new AuthError("Invalid password");
+    const isMatch = await Password.compare(password, user.password);
+    if (!isMatch) throw new AuthError("Invalid password", "password");
 
     const token = Jwt.sign({ id: user.id, email: user.email });
 
@@ -71,7 +71,6 @@ export const login = async (
       })
     );
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
