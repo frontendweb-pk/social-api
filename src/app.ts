@@ -41,8 +41,8 @@ app.get("/api", (req, res, next) => {
   res.status(200).json({ message: "Welcome to the social api" });
 });
 
-app.use("/api/auth", authRoute);
-app.use("/api/post", postRoute);
+app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/post", postRoute);
 
 // catch global errors
 app.use(errorHandler);
