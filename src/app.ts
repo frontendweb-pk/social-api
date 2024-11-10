@@ -17,7 +17,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
  * @constant {express.Application}
  */
 const app = express();
-
+const HTTP_PORT = 3001;
 // settings
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "views"));
@@ -41,8 +41,8 @@ app.get("/api", (req, res, next) => {
   res.status(200).json({ message: "Welcome to the social api" });
 });
 
-app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/post", postRoute);
+app.use("/api/auth", authRoute);
+app.use("/api/post", postRoute);
 
 // catch global errors
 app.use(errorHandler);
@@ -52,6 +52,10 @@ app.use(errorHandler);
  * @function
  */
 connectDb();
+
+app.listen(HTTP_PORT, () => {
+  console.log(`HTTP server running on port ${HTTP_PORT}`);
+});
 
 // export
 export default app;
