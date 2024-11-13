@@ -17,7 +17,7 @@ import morgan from "morgan";
  * @constant {express.Application}
  */
 const app = express();
-const HTTP_PORT = process.env.PORT || 80;
+const HTTP_PORT = process.env.PORT || 8080;
 // settings
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "views"));
