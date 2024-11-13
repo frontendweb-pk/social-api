@@ -2,22 +2,22 @@
  * @file index.ts
  * @description Entry point for the social-api application. Sets up the Express server, middleware, and configuration settings.
  */
-import fs from "fs";
+
 import express from "express";
 import path from "path";
-import dotenv from "dotenv";
+import { config } from "dotenv";
+config({ path: `.env.${process.env.NODE_ENV}` });
 import { connectDb } from "./utils/db";
 import { errorHandler } from "./middleware/error-handler";
 import { authRoute } from "./routes/auth";
 import { postRoute } from "./routes/post";
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
-
+import morgan from "morgan";
 /**
  * Express application instance.
  * @constant {express.Application}
  */
 const app = express();
-const HTTP_PORT = 3001;
+const HTTP_PORT = process.env.PORT || 80;
 // settings
 app.set("view engine", "ejs");
 app.set("views", path.resolve(__dirname, "views"));
@@ -34,6 +34,7 @@ if (process.env.NODE_ENV === "production") {
 
 // add development settings
 if (process.env.NODE_ENV === "development") {
+  app.use(morgan("dev"));
   app.set("view cache", false);
 }
 
@@ -54,6 +55,7 @@ app.use(errorHandler);
 connectDb();
 
 app.listen(HTTP_PORT, () => {
+  console.log(process.version);
   console.log(`HTTP server running on port ${HTTP_PORT}`);
 });
 

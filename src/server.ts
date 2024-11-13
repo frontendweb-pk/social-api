@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import cluster from "cluster";
 import app from "./app";
-
+import { fork } from "child_process";
 if (cluster.isPrimary) {
   console.log(`Primary ${process.pid} is running`);
 
@@ -34,6 +34,13 @@ if (cluster.isPrimary) {
     console.log(`HTTP server running on port ${HTTP_PORT}`);
   });
 
+  const child = fork("child.js"); // Creates a new Node.js process running 'child.js'
+
+  child.on("message", (msg) => {
+    console.log("Received message from child:", msg);
+  });
+
+  child.send("Hello from parent");
   // Create and start HTTPS server
   const httpsServer = https.createServer(options, app);
   httpsServer.listen(HTTPS_PORT, () => {

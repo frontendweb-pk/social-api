@@ -1,0 +1,58 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to the main branch
+  pull_request:
+    branches:
+      - main # Trigger on PRs to main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20" # Change to the version you're using
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Run tests (optional)
+        run: |
+          npm test  # Or your test command here
+
+      - name: Build the application (optional)
+        run: |
+          npm run build  # If you have a build step like TypeScript or React app
+
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: SSH into EC2 and Deploy
+        uses: appleboy/ssh-action@v0.1.5
+        with:
+          host: ${{ secrets.EC2_HOST }} # The public IP or domain of your EC2
+          username: ${{ secrets.EC2_USERNAME }} # Usually 'ec2-user' or 'ubuntu'
+          key: ${{ secrets.EC2_PRIVATE_KEY }} # The private SSH key stored in GitHub Secrets
+          port: 22 # Default SSH port
+          script: |
+            cd /path/to/your/app  # Navigate to your app folder on EC2
+            git pull origin main  # Pull latest changes from GitHub
+            npm install  # Install any new dependencies
+            npm run build  # Build if needed (or skip this step if not applicable)
+            pm2 restart app  # If you're using PM2 for process management
+
+      - name: Notify deployment success (optional)
+        run: echo "Deployment successful!"
